@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My JavaScript Project</title>
+	
+	<script src="https://components.connect.trimble.com/trimble-connect-workspace-api/index.js"></script>
+
+	
+	<script src="https://unpkg.com/xdomain@0.8.2/dist/xdomain.min.js" 
+		slave="https://pset-api.connect.trimble.com/v1/proxy.html"></script>
+
+
+<script type="text/javascript" slave="https://pset-api.connect.trimble.com/v1/proxy.html">
+      
+   console.log("------- 1");
+
+   async function doConnect(){
+      
+      //const responseAccessToken = await WorkspaceAPI.extension.requestPermission("accesstoken");
+
+      var viewer = document.getElementById("viewer");
+      //viewer.hidden = false;
+
+      // var API2 = await TrimbleConnectWorkspace.connect(viewer, (event, data) => {
+         
+      // });
+      // console.log("------- API2" + API2.extension.getPermission);
+
+      // API2.extension.getPermission("accesstoken").then(accessToken => {
+		// 		console.log(accessToken);
+		// 	});
+
+      var API = await TrimbleConnectWorkspace.connect(viewer, (event, data) => {
+         switch (event) {
+            case "extension.command":
+            //"Command executed by the user: args.data"
+            break;
+            case "extension.accessToken":
+            console.log("Accestoken or status: args.data");
+            break;
+            case "extension.userSettingsChanged":
+            //"User settings changed!"
+            break;
+            default:
+         }
+         console.log("Event: ", event, data);
+      });
+         
+      API.embed.setTokens({accessToken: "accessToken_here"}); // or {shareToken: "shareToken_here"}
+      API.embed.init3DViewer({projectId: "1563276762593578"});
+
+
+      API.extension.getPermission("accesstoken").then(accessToken => {
+         console.log(accessToken);
+      });
+   }
+
+   async function getData() {
+
+     const API = await TrimbleConnectWorkspace.connect(document.getElementById("viewer"), 
+      (event, args) => {
+        console.log(event, args);
+      }
+    );
+   
+
+    console.log("------- 2");
+
+
+    console.log("------- 3");
+    
+    //const responseProject = await API.project.getProject();
+    //console.log(responseProject); // Trimble Connect project details
+    //const projectId = responseProject.id;
+    
+    //const responseAccessToken = await API.extension.requestPermission("accesstoken");
+    //const responseAccessToken = await WorkspaceAPI.extension.requestPermission("accesstoken");
+    //console.log(responseAccessToken);
+    //const accessToken = responseAccessToken;    
+
+    await API.embed.setTokens({accessToken: "accessToken"}); 
+    // (or) await API.embed.setTokens({shareToken: "shareToken_here"});
+    await API.embed.init3DViewer({projectId: "1563276762593578"}); 
+
+      /*
+    const apiUrl = `https://pset-api.connect.trimble.com/v1/psets/${projectId}`;
+    const responseData = await fetch(apiUrl, {
+       method: 'GET',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${accessToken}`
+       },
+    })
+    const jsonData = await responseData.json();
+      */
+    /*const propertyName = 'Propriété Test';
+    const propertyValue = 'Test';
+    const filter = `properties/${propertyName} ne null`;
+    const apiUrl = `https://pset-api.connect.trimble.com/propertyset/v1/projects/${projectId}/propertyset-instances?filter=${encodeURIComponent(filter)}`;
+
+    const responseData = await fetch(apiUrl, {
+       method: 'GET',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${accessToken}`
+       },
+    })
+    */
+      
+    //console.log('response : ', responseData);
+    //console.log('response json : ', jsonData);
+
+   }
+
+
+   console.log("------- 1.5");
+   //getData();
+</script>
+</head>
+<body>
+<!-- <script src="https://jonathang89.github.io/TrimbleConnectTest/script.js"/> -->
+
+   <div>
+      <button onclick="doConnect()">connect</button>  
+      <iframe id="viewer" src="https://web.connect.trimble.com/?isEmbedded=true" width="100%" height="750px"/>
+
+    </div>
+
+  
+   </body>
+</html>
